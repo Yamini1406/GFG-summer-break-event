@@ -1,1 +1,71 @@
+https://practice.geeksforgeeks.org/contest/challenge-1-array-matrix/problems/#
 
+
+QUESTION:
+--------
+one can make the given array palindromic by removing some element which is equal to k.The task is to find if it is possible to make the array palindromic.
+NOTE: one can remove all or zero elements to make the array palindromic.
+
+example:
+-------
+a[]={1,2,3,2,3,2,1,3} k=3
+output: yes
+
+a[]={1,2,3,3,4,2,1} k=1
+output: no
+
+solution
+--------
+
+//Initial Template for C++
+
+#include<bits/stdc++.h>
+using namespace std;
+
+
+ // } Driver Code Ends
+//User function Template for C++
+
+
+class Solution{
+    public:
+    bool palindromicArray(vector<int>& a, int n,int k){
+        // vector<int> res;
+        // int k=0;
+        // for(int i=0;i<a.size();i++)
+        // {
+        //     if(a[i]!=key) res[k++]=a[i];
+        // }
+        // reverse(res.begin(),res.end());
+        int left=0,right=a.size()-1;
+        while(left<=right)
+        {
+            if(a[left]==k) left++;
+            if(a[right]==k) right--;
+            if(a[left++]!=a[right--]) return false;
+        }
+        return true;
+        
+    }
+};
+
+// { Driver Code Starts.
+
+
+int main(){
+    int t;
+    cin>>t;
+    while(t--){
+        int n;
+        cin>>n;
+        vector<int> a(n);
+        for(int i=0;i<n;i++){
+            cin>>a[i];
+        }
+        int k;
+        cin>>k;
+        Solution obj;
+        bool ans = obj.palindromicArray(a,n,k);
+        cout<<(ans == true ? "Yes": "No")<<endl;
+    }
+}  // } Driver Code Ends

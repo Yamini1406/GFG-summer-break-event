@@ -1,0 +1,100 @@
+https://practice.geeksforgeeks.org/problems/sherlock-and-his-enemies2304/1?utm_source=gfg&utm_medium=article&utm_campaign=bottom_sticky_on_article
+
+You are given a number N. Find the total number of setbits in the numbers from 1 to N. 
+
+
+Example 1:
+
+Input: N = 3
+Output: 4
+Explaination: 
+1 -> 01, 2 -> 10 and 3 -> 11. 
+So total 4 setbits.
+ 
+
+Example 2:
+
+Input: N = 4
+Output: 5
+Explaination: 1 -> 01, 2 -> 10, 3 -> 11 
+and 4 -> 100. So total 5 setbits.
+ 
+
+Your Task:
+You do not need to read input or print anything. Your task is to complete the function countBits() which takes N as input parameter and returns the total number of setbits upto N.
+
+ 
+
+Expected Time Complexity: O(logN)
+Expected Auxiliary Space: O(1)
+
+ 
+
+Constraints:
+1 ≤ N ≤ 106  
+
+SOLUTION
+---------
+
+class Solution{
+    
+    static int highestBits(int N) {
+        // Bit manipulation
+        //Find the highest 2^x below N
+        //(suppose 10 -> 2^3 = 8)
+        int x = 0;
+        while((1<<x)<=N) {
+            x++;
+        }
+        return x-1; // since 2^0, 2^1, 2^2, 2^3 -> 4....we need to return highest power: 3
+    }
+    
+    static int countBits(int N){
+        
+        //(1<<2) -> 2^x
+        
+        //since recursive call, we need a base case
+        if(N==0) return 0;
+        
+        int x = highestBits(N);
+        
+        //Now till 2^x -> calculate the total no.of 1's -> 2^3 = 8 [0-7] -> 2^(x-1).x => 2^2(3) = 12:1's
+        int beforePower = (1<<(x-1))*(x);
+        //after [0-7] we have 8,9,10 - > [1000, 1001, 1010] -> MSB 1's calculation...After removing MSB
+        //000, 001, 010 -> thus recursive call
+        int afterPower = (N -  (1<<x) + 1); // 10-8+1 = 3
+        //Recursive call
+        int ans = beforePower + afterPower + countBits(N -  (1<<x)); //10-8 = 2 => 0,1,2 ->[000,001,010]
+        return ans;
+        
+    }
+}
+
+EXPLANATION
+-----------
+
+0-> 0000
+1-> 0001
+2-> 0010
+3-> 0011
+4-> 0100
+5-> 0101
+6-> 0110
+7-> 0111
+8-> 1000
+9-> 1001
+10->1010
+
+STEP-I: Nearest 2^x of 10 - > 2^3 = 8. Thus 0-7 bits 1's can be calculated
+                                       we can see that from right 0..1..0..1 => 8/2
+                                       next 00....11..00 => 8/2 = 4
+                                       next 0000.......1111 => 8/2 = 4
+         This can be done by bit manipulation.(1<<x)=>2^x
+STEP-II:  Till 2^x => [0-7] => therefore, 2^(x-1).x
+STEP-III: After [0-7] => 8,9,10 
+                        8 => 1000 => MSB: 1 --- 000 (0)
+                        9 => 1001 => MSB: 1 --- 001 (1)
+                       10 => 1010 => MSB: 1 --- 010 (2)
+         Now, thses many number of 1's --> 3: 1's should be calculated.
+         Formula: 10-8+1 : 3  [8,9,10] ==> N-(2^N)+1
+STEP-IV: recursive call then, (N-2^x)
